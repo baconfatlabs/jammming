@@ -1,5 +1,6 @@
 const clientID = '71a352963bab43f5bb9e671f25a65a38';
-const myURI = 'http://localhost:3000/';
+//const myURI = 'http://localhost:3000/';
+const myURI = 'http://hurdygurdy.baconfatlabs.com/';
 const spotifyBaseURL = 'https://api.spotify.com/v1/';
 
 let accessToken;
