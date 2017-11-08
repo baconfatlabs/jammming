@@ -23,15 +23,12 @@ class App extends React.Component {
   }
 
   addTrack(track){
-    let trackMatch = this.state.playlistTracks.filter( function(stateTrack) {
-      return stateTrack.id === track.id;
-    });
-
-    if(trackMatch.length === 0){
-      let newTrackList = this.state.playlistTracks.slice();
-      newTrackList.push(track);
-      this.setState({playlistTracks: newTrackList});
+    let tracks = this.state.playlistTracks;
+    if(!tracks.includes(track)){
+      tracks.push(track);
+      this.setState({playylistTracks: tracks});
     }
+  
   }
 
   removeTrack(track){
@@ -52,8 +49,6 @@ class App extends React.Component {
       searchResults: [],
       playlistTracks: []
     });
-
-
 
   }
 
