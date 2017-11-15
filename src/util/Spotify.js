@@ -1,6 +1,6 @@
 const clientID = '71a352963bab43f5bb9e671f25a65a38';
-//const myURI = 'http://localhost:3000/';
-const myURI = 'http://baconfatlabs.surge.sh/';
+const myURI = 'http://localhost:3000/';
+//const myURI = 'http://baconfatlabs.surge.sh/';
 const spotifyBaseURL = 'https://api.spotify.com/v1/';
 
 let accessToken;
@@ -105,6 +105,7 @@ const Spotify = {
           id: track.id,
           name: track.name,
           artist: track.artists[0].name,
+          artistID: track.artists[0].id,
           album: track.album.name,
           uri: track.uri
         }));
@@ -112,6 +113,37 @@ const Spotify = {
     );
   },
 
+  searchRelated(artist, track){
+    const accessToken = Spotify.getAccessToken();
+
+    return fetch(
+      `${spotifyBaseURL}recommendations?seed_artists=${artist}&seed_tracks=${track}&popularity=100`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      }
+    ).then(response => {
+        if(response.ok){
+          return response.json();
+        }
+    }, networkError => console.log('Network Error: ' + networkError.message)
+    ).then(
+      jsonResponse => {
+        if(!jsonResponse.tracks){
+          return [];
+        }
+        return jsonResponse.tracks.map( track => ({
+          id: track.id,
+          name: track.name,
+          artist: track.artists[0].name,
+          artistID: track.artists[0].id,
+          album: track.album.name,
+          uri: track.uri
+        }));
+      }
+    );
+  },
 
 }
 

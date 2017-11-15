@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
+import RelatedResults from '../RelatedResults/RelatedResults';
 import Playlist from '../Playlist/Playlist';
 import Spotify from '../../util/Spotify';
 
@@ -10,6 +11,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       searchResults: [],
+      relatedResults: [],
       playlistName: 'New Playlist',
       playlistTracks: []
     };
@@ -20,15 +22,27 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.search = this.search.bind(this);
 
+
   }
 
-  addTrack(track){
+  addTrack(track, src){
     let tracks = this.state.playlistTracks;
     if(!tracks.includes(track)){
       tracks.push(track);
       this.setState({playylistTracks: tracks});
     }
-  
+
+    //if track was added from search pane, populate a new recommendations list.
+    if(src === "search"){
+      Spotify.searchRelated(track.artistID, track.id).then(
+        response => {
+          console.log("Response");
+          console.log(response);
+          this.setState({relatedResults: response});
+        }
+      )
+    }
+
   }
 
   removeTrack(track){
@@ -47,6 +61,7 @@ class App extends React.Component {
     this.setState({
       playlistName: 'New Playlist',
       searchResults: [],
+      relatedResults: [],
       playlistTracks: []
     });
 
@@ -73,6 +88,7 @@ class App extends React.Component {
           <div className="App-playlist">
             <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} />
             <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack} onNameChange={this.updatePlaylistName} onSave={this.savePlaylist} />
+            <RelatedResults relatedResults={this.state.relatedResults} onAdd={this.addTrack} />
           </div>
         </div>
       </div>
