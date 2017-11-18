@@ -29,15 +29,13 @@ class App extends React.Component {
     let tracks = this.state.playlistTracks;
     if(!tracks.includes(track)){
       tracks.push(track);
-      this.setState({playylistTracks: tracks});
+      this.setState({playlistTracks: tracks});
     }
 
     //if track was added from search pane, populate a new recommendations list.
     if(src === "search"){
       Spotify.searchRelated(track.artistID, track.id).then(
         response => {
-          console.log("Response");
-          console.log(response);
           this.setState({relatedResults: response});
         }
       )
